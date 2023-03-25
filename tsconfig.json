@@ -1,4 +1,11 @@
 {
+    "exclude": [
+        "./build", ".coverage", "./tests", "jest.config.js"
+    ],
+    "ts-node": {
+        "transpileOnly": true,
+        "files": true
+    },
     "compilerOptions": {
         "target": "es2015",
         "module": "es2020",
@@ -8,7 +15,7 @@
         "rootDir": "src",
         "importHelpers": false,
         "strict": true,
-        "types": ["node"],
+        "types": ["node", "jest"],
         "esModuleInterop": true,
         "resolveJsonModule": true,
         "forceConsistentCasingInFileNames": true,
