@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import greetings from "./greetings"
-import configFile from "./config-file"
+import greetings from "./greetings.js"
+import configFile from "./config-file.js"
 import { Command } from 'commander'
 
 const cli = async () => {
@@ -18,5 +18,7 @@ const cli = async () => {
 
     // const conf = configFile()
 }
+
+cli()
 
 export default cli

@@ -6,7 +6,7 @@
     "type": "module",
     "scripts": {
         "pretest": "npm run build",
-        "test": "jest",
+        "test": "export TS_JEST_DISABLE_VER_CHECKER=true && jest",
         "create": "npm run build && npm run test",
         "build": "tsc -p .",
         "local": "sudo npm i -g && post-cli",

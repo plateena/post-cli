@@ -1,16 +1,19 @@
-import cli from "../src/index"
-import exec from 'child_process'
+import { cli } from './utils/cli'
 
 describe('test', () => {
-    it('can be true', async () => {
-        expect(true).toBe(true)
+    it('can show app error', async () => {
+        let rs: any = await cli(`node ./build/index.js`)
+        console.log(rs);
+        
     })
 
-    it('can show help', async () => {
-        let rs = await exec(cli, () => {
-        })
+    it('can show app version', async () => {
+        let rs: any = await cli(`node ./build/index.js -v`)
+        expect(rs).toMatch(/v1.0/)
+    })
 
-        console.log(rs)
+    it('can show app --help', async () => {
+        let rs: any = await cli(`node ./build/index.js -h`)
+        expect(rs).toMatch(/-h, --help +display help for command/)
     })
 })
-
