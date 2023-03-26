@@ -1,0 +1,8 @@
+workspace: "post-cli-example"
+variable: 
+  base_url: "https://local.hws-console.test.com"
+
+request:
+  test1: 
+    method: "GET"
+    url: "{{base_url}}/demo"
