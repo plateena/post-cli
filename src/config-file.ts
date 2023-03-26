@@ -1,13 +1,14 @@
 import fs from "fs"
+import path from "path"
 
 export const loadConfigFile = (path: string) => {
-    let fileExist = checkFileExist(path);
+    let fileExist = isFileExist(path);
     if (!fileExist) {
         return false;
     }
 }
 
-const checkFileExist = (path: string) => {
+export const isFileExist = (path: string): boolean => {
     try {
         if (fs.existsSync(path)) {
             return true;
@@ -20,6 +21,15 @@ const checkFileExist = (path: string) => {
         console.error(error);
         return false;
 
+    }
+}
+
+export const isValidExtension = (file: string): boolean => {
+    if (['.yaml', '.yml'].includes(path.extname(file))) {
+        return true
+    } else {
+        console.error(`${file} is invalid. Please provide yaml or yml file extension.`)
+        return false;
     }
 }
 
