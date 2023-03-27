@@ -1,14 +1,16 @@
-import * as configFn  from "../../src/config-file";
+import * as configFn from "../../src/config-file"
+import * as req from "../../src/make-request"
 
 const validFilePath = "./tests/asset/default.yaml"
 
 describe("Make Request", () => {
-    const config = configFn.loadConfigFile(validFilePath, 'test1')
-    if (!config) {
+    const request: configRequest | false = configFn.loadConfigFile(validFilePath, 'test1')
+    if (!request) {
         throw new Error("Load config fail returning false")
     }
 
     it("can make request", async () => {
-        expect(config.url).toBe("https://local.hws-console.test.com/demo")
+        const rs = await req.process(request)
+        expect(rs.status).toBe(200)
     });
 });

@@ -5,6 +5,9 @@ declare interface configVariable {
 declare interface configRequest {
     method: method_enum
     url: string
+    params?: {
+        [key: string]: string | boolean | number
+    }
 }
 
 declare interface configFile {
