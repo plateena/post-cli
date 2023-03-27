@@ -3,7 +3,7 @@ import * as prepareFn from "../../src/prepare-make-request";
 
 const validFilePath = "./tests/asset/default.yaml"
 
-describe("Prepare Make Request", () => {
+describe("Prepare url", () => {
     // prepare the request
     const request: configRequest | false = configFn.loadConfigFile(validFilePath, 'test1')
     if (!request) {
