@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/indent */
 import fs from 'fs'
-import path from 'path'
 import yaml from 'js-yaml'
+import * as validator from './utils/validator.js'
 
 export const loadConfigFile = (path: string, requestName: string): configRequest | false => {
-    const isValidFileExt = isValidExtension(path)
+    const isValidFileExt = validator.isValidExtension(path)
     if (!isValidFileExt) {
         return false
     }
 
-    const fileExist = isFileExist(path)
+    const fileExist = validator.isFileExist(path)
     if (!fileExist) {
         return false
     }
@@ -26,29 +26,6 @@ export const loadConfigFile = (path: string, requestName: string): configRequest
     }
 
     return false
-}
-
-export const isFileExist = (path: string): boolean => {
-    try {
-        if (fs.existsSync(path)) {
-            return true
-        } else {
-            console.error(`File ${path} not exist. Please provide a valid file path.`)
-            return false
-        }
-    } catch (error) {
-        console.error(error)
-        return false
-    }
-}
-
-export const isValidExtension = (file: string): boolean => {
-    if (['.yaml', '.yml'].includes(path.extname(file))) {
-        return true
-    } else {
-        console.error(`${file} is invalid. Please provide yaml or yml file extension.`)
-        return false
-    }
 }
 
 export const loadConfigFromYaml = (path: string): configFile | false => {
@@ -77,6 +54,10 @@ export const getConfigVariable = (config: configFile): configVariable => {
 export const populateConfig = <T>(request: T, variables: configVariable): T => {
     const data = request
 
+    if (variables == undefined) {
+        return data
+    }
+
     if (typeof data == "object" && data != null) {
         Object.entries(data as object).forEach(([key, value]) => {
             if (data && typeof value == "object") {
@@ -86,18 +67,19 @@ export const populateConfig = <T>(request: T, variables: configVariable): T => {
                 if (/.*{{(\w+)}}.+/g.test(value)) {
                     const matched = value.matchAll(regexp)
                     for (const match of matched) {
-                        const ori: string = data[key as keyof typeof data] as string
-                        const newstr = ori.replace(`{{${match[1]}}}`, variables[match[1] as keyof configVariable] as string)
-                        data[key as keyof typeof data] = newstr as (T & object)[keyof T]
+                        if (variables[match[1] as keyof configVariable] !== undefined) {
+                            const ori: string = data[key as keyof typeof data] as string
+                            const newstr = ori.replace(`{{${match[1]}}}`, variables[match[1] as keyof configVariable] as string)
+                            data[key as keyof typeof data] = newstr as (T & object)[keyof T]
+                        }
                     }
                 }
             }
         })
 
         return data;
-    } else {
-        return request
     }
+    return request
 }
 
 export default loadConfigFile

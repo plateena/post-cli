@@ -1,9 +1,12 @@
 workspace: "post-cli-example"
-variable: 
-  base_url: "https://local.hws-console.com"
+variables: 
+  base_url: "http://local.hws-console.com"
 
 
 request: 
   test1: 
     method: "POST"
-    url: "{{ base_url }}/demo"
+    url: "{{base_url}}/ai/:service/:version"
+    params: 
+      service: 'im'
+      version: 'v2'

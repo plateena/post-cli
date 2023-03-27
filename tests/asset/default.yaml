@@ -1,23 +1,26 @@
 workspace: "post-cli-example"
 variables: 
-  base_url: "https://local.hws-console.test.com"
-  base_url_ori: "https://local.hws-console.com"
+  base_url: "http://local.hws-console.com"
 
 request:
   test1: 
     method: "GET"
     url: "{{base_url}}/demo"
+    data: 
+      name: "Jonh Doe"
+      email: "john.doe@mailinator.com"
+      password: "secret"
 
   test2: 
-    method: "GET"
-    url: "{{base_url_ori}}/ai/:service/:version"
+    method: "POST"
+    url: "{{base_url}}/ai/:service/:version"
     params: 
       service: "im"
       version: "v2"
 
   test3: 
     method: "GET"
-    url: "{{base_url_ori}}/ai/:service/:version"
+    url: "{{base_url}}/ai/:service/:version"
     queries:
       page: 10
       perPage: 15

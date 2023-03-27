@@ -1,6 +1,6 @@
- /**
-  * get the method 
-  */
+/**
+ * get the method 
+ */
 export function getMethod(request: configRequest): method_enum {
     return request.method
 }
@@ -46,4 +46,11 @@ export function setUrlQuery(url: configRequest["url"], queries: configRequest["q
     })
 
     return url + `?${data.join('&')}`
+}
+
+export function getData(request: configRequest): configRequest["data"] {
+    if (Object.prototype.hasOwnProperty.call(request, 'data')) {
+        return request.data
+    }
+    return {}
 }

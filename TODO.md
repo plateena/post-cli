@@ -15,3 +15,7 @@
 - [ ] data
 - [ ] file
 - [ ] header
+
+## Note
+- axios error return with key [ 'message', 'name', 'code', 'config', 'request', 'response' ]
+- axios success return with key [ 'status', 'statusText', 'headers', 'config', 'request', 'data' ]

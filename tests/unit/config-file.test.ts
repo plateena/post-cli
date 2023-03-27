@@ -19,7 +19,7 @@ describe("Config file exist", () => {
 
     it("can check file not exist", async () => {
         const logSpy = jest.spyOn(console, 'error')
-        // .mockImplementation(() => { })
+            .mockImplementation(() => { })
         const rs = loadConfigFile(invalidFilePath, 'test1')
         expect(rs).toBe(false)
         expect(logSpy).toHaveBeenCalledWith(`File ${invalidFilePath} not exist. Please provide a valid file path.`)
@@ -36,7 +36,7 @@ describe("Config file ext", () => {
     it("can check ext is in-valid", async () => {
         const rs = isValidExtension(validFilePath + ".png")
         const logSpy = jest.spyOn(console, 'error')
-        // .mockImplementation(() => { })
+            .mockImplementation(() => { })
         expect(rs).toBe(false)
         expect(logSpy).toHaveBeenCalledWith(`${validFilePath}.png is invalid. Please provide yaml or yml file extension.`)
     });
@@ -49,14 +49,14 @@ describe("Config file content", () => {
     }
 
     it("can check config file content base on variable base url", async () => {
-        expect(content.variables.base_url).toBe("https://local.hws-console.test.com")
+        expect(content.variables.base_url).toBe("http://local.hws-console.com")
         expect(content.request.test1.url).toBe("{{base_url}}/demo")
         expect(content.request.test1.method).toBe("GET")
     });
 
     it("can get config variable data", async () => {
         const variables = getConfigVariable(content)
-        expect(variables.base_url).toBe('https://local.hws-console.test.com')
+        expect(variables.base_url).toBe('http://local.hws-console.com')
     });
 
     it("can get request with given name", async () => {
@@ -72,7 +72,7 @@ describe("Config file content", () => {
     it("can populate config data", async () => {
         const rs = populateConfig(getConfigRequest(content, 'test1'), getConfigVariable(content))
         if (rs) {
-            expect(rs.url).toBe("https://local.hws-console.test.com/demo")
+            expect(rs.url).toBe("http://local.hws-console.com/demo")
         } else {
             throw new Error("Request are not return, false received")
         }

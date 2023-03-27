@@ -3,7 +3,6 @@ import { cli } from './utils/cli'
 describe('test', () => {
     it('can show app error', async () => {
         const rs: any = await cli(`node ./build/index.js`)
-        console.log(rs);
         
     })
 

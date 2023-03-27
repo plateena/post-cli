@@ -2,7 +2,7 @@ declare interface configVariable {
     [key: string]: string | boolean | number
 }
 
-declare interface configRequest {
+declare interface configRequest<T = string> {
     method: method_enum
     url: string
     params?: {
@@ -11,6 +11,9 @@ declare interface configRequest {
     queries?: {
         [key: string]: string
     }
+    data?: {
+        [key: string]: string | boolean | number | Array<T>
+    } | never[]
 }
 
 declare interface configFile {
@@ -26,4 +29,3 @@ declare enum method_enum {
     "PUT",
     "DELETE",
 }
-
