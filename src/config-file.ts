@@ -3,30 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import yaml from 'js-yaml'
 
-enum method_enum {
-    "POST",
-    "GET",
-    "PUT",
-    "DELETE",
-}
-
-type configVariable = {
-    [key: string]: string | boolean | number
-}
-
-type configRequest = {
-    method: method_enum,
-    url: string,
-}
-
-type configFile = {
-    variables: configVariable,
-    request: {
-        [key: string]: configRequest
-    }
-}
-
-export const loadConfigFile = (path: string) => {
+export const loadConfigFile = (path: string, requestName: string): configRequest | false => {
     const isValidFileExt = isValidExtension(path)
     if (!isValidFileExt) {
         return false
@@ -36,6 +13,19 @@ export const loadConfigFile = (path: string) => {
     if (!fileExist) {
         return false
     }
+
+    const config = loadConfigFromYaml(path)
+    if (config) {
+        const variables = getConfigVariable(config)
+        const request = getConfigRequest(config, requestName)
+        if (request) {
+            const data = populateConfig<configRequest>(request, variables)
+
+            return data
+        }
+    }
+
+    return false
 }
 
 export const isFileExist = (path: string): boolean => {
@@ -72,7 +62,7 @@ export const loadConfigFromYaml = (path: string): configFile | false => {
 }
 
 export const getConfigRequest = (config: configFile, requestName: string): configRequest | false => {
-    if (config.request.hasOwnProperty(requestName)) {
+    if (Object.prototype.hasOwnProperty.call(config.request, requestName)) {
         return config.request[requestName as keyof typeof config]
     } else {
         console.error(`Request name ${requestName} can't be found. Make sure you have create the request in the yaml file.`);
@@ -96,8 +86,8 @@ export const populateConfig = <T>(request: T, variables: configVariable): T => {
                 if (/.*{{(\w+)}}.+/g.test(value)) {
                     const matched = value.matchAll(regexp)
                     for (const match of matched) {
-                        let ori: string = data[key as keyof typeof data] as string
-                        let newstr = ori.replace(`{{${match[1]}}}`, variables[match[1] as keyof configVariable] as string)
+                        const ori: string = data[key as keyof typeof data] as string
+                        const newstr = ori.replace(`{{${match[1]}}}`, variables[match[1] as keyof configVariable] as string)
                         data[key as keyof typeof data] = newstr as (T & object)[keyof T]
                     }
                 }
@@ -110,4 +100,4 @@ export const populateConfig = <T>(request: T, variables: configVariable): T => {
     }
 }
 
-export default { loadConfigFile }
+export default loadConfigFile

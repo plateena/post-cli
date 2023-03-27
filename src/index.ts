@@ -20,7 +20,7 @@ const cli = async () => {
             file = filename
         }
 
-        config.loadConfigFile(file)
+        // config.loadConfigFile(file)
     })
 
     program.parse()

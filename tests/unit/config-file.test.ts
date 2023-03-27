@@ -13,14 +13,14 @@ const invalidFilePath = '.workspace/non-exist-file.yaml'
 describe("Config file exist", () => {
 
     it("can check file exist", async () => {
-        const rs = loadConfigFile(validFilePath)
+        const rs = loadConfigFile(validFilePath, 'test1')
         expect(rs).not.toBe(false)
     })
 
     it("can check file not exist", async () => {
         const logSpy = jest.spyOn(console, 'error')
         // .mockImplementation(() => { })
-        const rs = loadConfigFile(invalidFilePath)
+        const rs = loadConfigFile(invalidFilePath, 'test1')
         expect(rs).toBe(false)
         expect(logSpy).toHaveBeenCalledWith(`File ${invalidFilePath} not exist. Please provide a valid file path.`)
     })
