@@ -1,7 +1,7 @@
 # Post-cli
 
 ## Current
-- set query to url
+- set data to axios
 
 ## Make Request
 
@@ -11,7 +11,7 @@
 - [x] method
 - [x] url
 - [x] param
-- [ ] query
+- [x] query
 - [ ] data
 - [ ] file
 - [ ] header

@@ -8,6 +8,9 @@ declare interface configRequest {
     params?: {
         [key: string]: string | boolean | number
     }
+    queries?: {
+        [key: string]: string
+    }
 }
 
 declare interface configFile {

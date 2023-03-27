@@ -14,3 +14,13 @@ request:
     params: 
       service: "im"
       version: "v2"
+
+  test3: 
+    method: "GET"
+    url: "{{base_url_ori}}/ai/:service/:version"
+    queries:
+      page: 10
+      perPage: 15
+    params: 
+      service: "im"
+      version: "v2"

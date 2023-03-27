@@ -4,15 +4,21 @@ import * as prepareFn from "../../src/prepare-make-request";
 const validFilePath = "./tests/asset/default.yaml"
 
 describe("Prepare Make Request", () => {
+    // prepare the request
     const request: configRequest | false = configFn.loadConfigFile(validFilePath, 'test1')
     if (!request) {
         throw new Error("Load request fail returning false")
     }
-    const requestParam: configRequest | false = configFn.loadConfigFile(validFilePath, 'test2')
-    if (!requestParam) {
+    const requestWithParam: configRequest | false = configFn.loadConfigFile(validFilePath, 'test2')
+    if (!requestWithParam) {
+        throw new Error("Load request fail returning false")
+    }
+    const requestWithQueries: configRequest | false = configFn.loadConfigFile(validFilePath, 'test3')
+    if (!requestWithQueries) {
         throw new Error("Load request fail returning false")
     }
 
+    // start doing the test
     it("can get method", async () => {
         const rs = prepareFn.getMethod(request)
         expect(rs).toBe("GET")
@@ -24,25 +30,30 @@ describe("Prepare Make Request", () => {
     });
 
     it("can get url with params", async () => {
-        const rs = prepareFn.getUrl(requestParam)
+        const rs = prepareFn.getUrl(requestWithParam)
         expect(rs).toBe("https://local.hws-console.com/ai/im/v2")
     });
 
     it("can get url with params with query", async () => {
-        requestParam.url = "https://local.hws-console.com/ai/:service/:version?page=12"
-        const rs = prepareFn.getUrl(requestParam)
+        requestWithParam.url = "https://local.hws-console.com/ai/:service/:version?page=12"
+        const rs = prepareFn.getUrl(requestWithParam)
         expect(rs).toBe("https://local.hws-console.com/ai/im/v2?page=12")
     });
 
     it("can get url with params with prefix same", async () => {
-        requestParam.url = "https://local.hws-console.com/ai/:service/:version/:serviceVersion?page=12"
-        const rs = prepareFn.getUrl(requestParam)
+        requestWithParam.url = "https://local.hws-console.com/ai/:service/:version/:serviceVersion?page=12"
+        const rs = prepareFn.getUrl(requestWithParam)
         expect(rs).toBe("https://local.hws-console.com/ai/im/v2/:serviceVersion?page=12")
     });
 
     it("can get url with params with prefix same end", async () => {
-        requestParam.url = "https://local.hws-console.com/ai/:serviceVersion/:version/:service?page=12"
-        const rs = prepareFn.getUrl(requestParam)
+        requestWithParam.url = "https://local.hws-console.com/ai/:serviceVersion/:version/:service?page=12"
+        const rs = prepareFn.getUrl(requestWithParam)
         expect(rs).toBe("https://local.hws-console.com/ai/:serviceVersion/v2/im?page=12")
+    });
+
+    it("can populate the queries", async () => {
+        const rs = prepareFn.getUrl(requestWithQueries)
+        expect(rs).toBe("https://local.hws-console.com/ai/im/v2?page=10&perPage=15")
     });
 });
