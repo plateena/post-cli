@@ -1,16 +1,27 @@
 workspace: "post-cli-example"
 variables: 
   base_url: "http://local.hws-console.com"
+  token: 'Bearer MCLvUCICh1zQ1cOYKmrSOy6jqq6sPmnbUWtdJ3ec'
 
 
 request: 
   test1: 
     headers: 
-      Authorization: 'Bearer MCLvUCICh1zQ1cOYKmrSOy6jqq6sPmnbUWtdJ3ec'
+      Authorization: "{{token}}"
     method: "POST"
     url: "{{base_url}}/ai/:service/:version"
     params: 
       service: 'im'
       version: 'v2'
+    data: 
+      image: './workspace/Guns-and-stuff.webp'
+
+  test2: 
+    headers: 
+      Authorization: '{{token}}'
+    method: "POST"
+    url: "{{base_url}}/ai/:service"
+    params: 
+      service: 'images'
     data: 
       image: './workspace/Guns-and-stuff.webp'

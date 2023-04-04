@@ -63,8 +63,8 @@ export const populateConfig = <T>(request: T, variables: configVariable): T => {
             if (data && typeof value == "object") {
                 data[key as keyof typeof data] = populateConfig(value, variables)
             } else if (data && typeof value == "string") {
-                const regexp = /.*{{(\w+)}}.+/g
-                if (/.*{{(\w+)}}.+/g.test(value)) {
+                const regexp = /.*{{(\w+)}}.*/g
+                if (/.*{{(\w+)}}.*/g.test(value)) {
                     const matched = value.matchAll(regexp)
                     for (const match of matched) {
                         if (variables[match[1] as keyof configVariable] !== undefined) {

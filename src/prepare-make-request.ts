@@ -72,7 +72,7 @@ export function getData(request: configRequest): FormData {
 
 export function getHeader(config: configRequest): configHeader {
     const defaultHeader = {
-        Accept: '*/*',
+        Accept: 'application/json',
         Connection: 'keep-alive',
         "Content-Type": "multipart/form-data",
     }
