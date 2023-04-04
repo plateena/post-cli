@@ -19,19 +19,32 @@ greetings()
 program
     .name('post-cli')
     .description('cli version of postman')
-    .argument('<testName>', 'the test name under request')
+    .argument('[testName]', 'the test name under request')
     .argument('[fileName]', 'name of the config file without yaml extension')
+    .option('-l, --list', 'list all available request')
     .version('v1.0', '-v, --version', 'output the current verions')
-    .action(async (testName, fileName) => {
+    .action(async (testName, fileName, opt) => {
         let file = './workspace/default.yaml'
         if (fileName) {
             file = fileName
         }
+        if (opt.list) {
+            const lists = config.getRequestList(file)
+
+            if (lists != false) {
+                for (const list of lists) {
+                    console.log('- ' + list);
+                }
+            }
+            return
+        }
+
 
         // load the config
         const rs = config.loadConfigFile(file, testName)
 
         if (typeof rs == 'object') {
+
             // check if the url is valid
             if (validator.isValidURL(rs.url)) {
                 console.error(`${rs.url} is not a valid url`)
@@ -44,7 +57,9 @@ program
 
             if ('response' in res) {
                 generateTitle(" Response ")
-                console.log(util.inspect(_.pick(res.response, ['status', 'statusText', 'data']), true, null, true))
+                // const a = _.get(res, 'config')
+                // console.log(Object.keys(a as unknown as object))
+                console.log(util.inspect(_.pick(res.response, ['config.headers', 'config.url', 'config.method', 'status', 'statusText', 'data']), true, null, true))
             } else {
                 generateTitle(" Response ")
 

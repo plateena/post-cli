@@ -12,9 +12,13 @@
 - [x] url
 - [x] param
 - [x] query
-- [ ] data
-- [ ] file
-- [ ] header
+- [x] data
+- [x] file
+- [x] header
+
+- [ ] add option to output to file
+- [ ] add option to set response output items
+- [ ] can list all the request list
 
 ## Note
 - axios error return with key [ 'message', 'name', 'code', 'config', 'request', 'response' ]

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/indent */
+import _ from 'lodash'
 import fs from 'fs'
 import yaml from 'js-yaml'
 import * as validator from './utils/validator.js'
@@ -80,6 +81,31 @@ export const populateConfig = <T>(request: T, variables: configVariable): T => {
         return data;
     }
     return request
+}
+
+export function getRequestList(path: string): string[] | [] | false {
+    const isValidFileExt = validator.isValidExtension(path)
+    if (!isValidFileExt) {
+        return false
+    }
+
+    const fileExist = validator.isFileExist(path)
+    if (!fileExist) {
+        return false
+    }
+
+    const config = loadConfigFromYaml(path)
+
+    const data = []
+    if (config != false) {
+        for (const req in config.request) {
+            let str = req
+            str += ' - ' + _.get(config.request[req], 'descriptions', 'no description')
+            data.push(str)
+        }
+    }
+
+    return data
 }
 
 export default loadConfigFile

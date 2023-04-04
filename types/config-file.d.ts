@@ -3,6 +3,7 @@ declare interface configVariable {
 }
 
 declare interface configRequest<T = string> {
+    descriptions?: string
     headers?: configHeader,
     method: method_enum
     url: string
