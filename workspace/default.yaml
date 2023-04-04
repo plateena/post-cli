@@ -5,6 +5,8 @@ variables:
 
 request: 
   test1: 
+    headers: 
+      Authorization: 'Bearer MCLvUCICh1zQ1cOYKmrSOy6jqq6sPmnbUWtdJ3ec'
     method: "POST"
     url: "{{base_url}}/ai/:service/:version"
     params: 

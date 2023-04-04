@@ -3,6 +3,7 @@ declare interface configVariable {
 }
 
 declare interface configRequest<T = string> {
+    headers?: configHeader,
     method: method_enum
     url: string
     params?: {
@@ -16,11 +17,15 @@ declare interface configRequest<T = string> {
     } | never[]
 }
 
+declare interface configHeader {
+    Authorization?: string
+}
+
 declare interface configFile {
     variables: configVariable,
     request: {
         [key: string]: configRequest
-    }
+    },
 }
 
 declare enum method_enum {
@@ -29,3 +34,4 @@ declare enum method_enum {
     "PUT",
     "DELETE",
 }
+

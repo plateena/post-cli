@@ -54,3 +54,10 @@ export function getData(request: configRequest): configRequest["data"] {
     }
     return {}
 }
+
+export function getHeader(config: configRequest): configHeader {
+    if (Object.prototype.hasOwnProperty.call(config, 'headers')) {
+        return config.headers as configHeader
+    }
+    return {}
+}
