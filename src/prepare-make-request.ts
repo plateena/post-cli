@@ -1,3 +1,9 @@
+import FormData from 'form-data'
+import fs from 'fs'
+import path from 'path'
+
+const resolve = path.resolve
+
 /**
  * get the method 
  */
@@ -48,16 +54,32 @@ export function setUrlQuery(url: configRequest["url"], queries: configRequest["q
     return url + `?${data.join('&')}`
 }
 
-export function getData(request: configRequest): configRequest["data"] {
+export function getData(request: configRequest): FormData {
+
+    const form = new FormData()
+
     if (Object.prototype.hasOwnProperty.call(request, 'data')) {
-        return request.data
+        Object.entries(request.data as object).forEach(([key, val]) => {
+            if (fs.existsSync(resolve(val))) {
+                form.append(key, fs.createReadStream(resolve(val)))
+            } else {
+                form.append(key, val)
+            }
+        })
     }
-    return {}
+    return form
 }
 
 export function getHeader(config: configRequest): configHeader {
-    if (Object.prototype.hasOwnProperty.call(config, 'headers')) {
-        return config.headers as configHeader
+    const defaultHeader = {
+        Accept: '*/*',
+        Connection: 'keep-alive',
+        "Content-Type": "multipart/form-data",
     }
+
+    if (Object.prototype.hasOwnProperty.call(config, 'headers')) {
+        return { ...defaultHeader, ...config.headers }
+    }
+
     return {}
 }

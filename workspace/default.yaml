@@ -12,3 +12,5 @@ request:
     params: 
       service: 'im'
       version: 'v2'
+    data: 
+      image: './workspace/Guns-and-stuff.webp'
