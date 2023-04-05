@@ -10,8 +10,8 @@ import util from 'util'
 import fs from 'fs'
 import path from 'path'
 import { generateTitle } from './utils/title.js'
-import { exec } from 'child_process'
 import { listRequest } from './list-request.js'
+import { writeResult } from './write-result.js'
 
 const program = new Command()
 
@@ -23,6 +23,7 @@ program
     .argument('[testName]', 'the test name under request')
     .argument('[fileName]', 'name of the config file without yaml extension')
     .option('-l, --list', 'list all available request')
+    .option('-o, --output <value>', 'write output to file')
     .version('v1.0', '-v, --version', 'output the current verions')
     .action(async (testName, fileName, opt) => {
         let file = './workspace/default.yaml'
@@ -60,22 +61,15 @@ program
                         console.log(util.inspect(_.pick(res, ['config.headers', 'config.url', 'config.method', 'status', 'statusText', 'data', 'message']), true, null, true))
                     }
 
-                    const file = path.resolve('./workspace/output.json')
-                    fs.writeFileSync(file, JSON.stringify(_.pick(res, ['config.headers', 'config.url', 'config.method', 'status', 'statusText', 'data'])), 'utf8')
-
-                    exec(`${path.resolve('./node_modules/prettier/bin-prettier.js')} --write ${path.resolve('./workspace/output.json')}`, (error, stdout, stderr) => {
-                        if (error) {
-                            console.log(`error: ${error.message}`);
-                            return;
-                        }
-                        if (stderr) {
-                            console.log(`stderr: ${stderr}`);
-                            return;
-                        }
-                        console.log(`stdout: ${stdout}`);
-                    })
+                    if (opt.output) {
+                        writeResult(opt.output, res)
+                    }
                 } catch (error) {
-                    console.error(chalk.red.bold(_.get(error, 'message')))
+                    if (error instanceof Error) {
+                        console.error(chalk.red.bold(error.message))
+                    } else {
+                        console.error('Unexpected error', error)
+                    }
                 }
 
             }

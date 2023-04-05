@@ -1,7 +1,6 @@
 import FormData from 'form-data'
 import fs from 'fs'
 import path from 'path'
-import chalk from 'chalk'
 import * as validator from './utils/validator.js'
 
 const resolve = path.resolve
