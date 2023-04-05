@@ -9,7 +9,7 @@ const resolve = path.resolve
  * get the method 
  */
 export function getMethod(request: configRequest): method_enum {
-    if('method' in request) {
+    if ('method' in request) {
         return request.method
     } else {
         return 'GET' as unknown as method_enum
@@ -68,7 +68,7 @@ export function setUrlQuery(url: configRequest["url"], queries: configRequest["q
     return url + `?${data.join('&')}`
 }
 
-export function getData(request: configRequest): FormData {
+export function getData(request: configRequest, data?: Array<string>): FormData {
 
     const form = new FormData()
 
@@ -81,6 +81,16 @@ export function getData(request: configRequest): FormData {
             }
         })
     }
+
+    if (data) {
+        for (const i of data) {
+            const arr = i.split('=')
+            if (arr.length == 2) {
+                form.append(arr[0], arr[1])
+            }
+        }
+    }
+
     return form
 }
 

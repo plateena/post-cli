@@ -22,13 +22,15 @@ program
     .argument('[testName]', 'the test name under request')
     .argument('[fileName]', 'name of the config file without yaml extension')
     .option('-l, --list', 'list all available request')
-    .option('-o, --output <value>', 'write output to file')
+    .option('-o, --output <filePath>', 'write output to file')
+    .option('-d, --data <data...>', 'data to send with axios')
     .version('v1.0', '-v, --version', 'output the current verions')
     .action(async (testName, fileName, opt) => {
         let file = './workspace/default.yaml'
         if (fileName) {
             file = fileName
         }
+
 
         // listing the request with description in file
         if (opt.list) {
@@ -43,7 +45,7 @@ program
             if (typeof rs == 'object') {
 
                 try {
-                    const res: AxiosResponse = await req.process(rs)
+                    const res: AxiosResponse = await req.process(rs, opt)
                     generateTitle(" Request ")
                     console.log(rs)
 

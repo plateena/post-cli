@@ -35,4 +35,3 @@ declare enum method_enum {
     "PUT",
     "DELETE",
 }
-
