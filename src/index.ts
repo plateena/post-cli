@@ -2,15 +2,16 @@
 import greetings from './greetings.js'
 import * as config from './config-file.js'
 import { Command } from 'commander'
-import * as validator from './utils/validator.js'
 import * as req from './make-request.js'
 // import boxen from "boxen"
+import chalk from 'chalk'
 import _ from 'lodash'
 import util from 'util'
 import fs from 'fs'
 import path from 'path'
 import { generateTitle } from './utils/title.js'
 import { exec } from 'child_process'
+import { listRequest } from './list-request.js'
 
 const program = new Command()
 
@@ -28,64 +29,62 @@ program
         if (fileName) {
             file = fileName
         }
-        if (opt.list) {
-            const lists = config.getRequestList(file)
 
-            if (lists != false) {
-                for (const list of lists) {
-                    console.log('- ' + list);
-                }
-            }
+        // listing the request with description in file
+        if (opt.list) {
+            listRequest(file)
             return
         }
 
+        if (testName) {
+            // load the config
+            const rs = config.loadConfigFile(file, testName)
 
-        // load the config
-        const rs = config.loadConfigFile(file, testName)
+            if (typeof rs == 'object') {
 
-        if (typeof rs == 'object') {
+                try {
+                    const res = await req.process(rs)
+                    generateTitle(" Request ")
+                    console.log(rs)
 
-            // check if the url is valid
-            if (validator.isValidURL(rs.url)) {
-                console.error(`${rs.url} is not a valid url`)
-            }
+                    if ('response' in res) {
+                        generateTitle(" Response ")
+                        // const a = _.get(res, 'config')
+                        // console.log(Object.keys(a as unknown as object))
+                        console.log(util.inspect(_.pick(res.response, ['config.headers', 'config.url', 'config.method', 'status', 'statusText', 'data']), true, null, true))
+                    } else {
+                        generateTitle(" Response ")
 
-            const res = await req.process(rs)
+                        // const a = _.get(res, 'config')
+                        // console.log(Object.keys(a as unknown as object))
+                        console.log(util.inspect(_.pick(res, ['config.headers', 'config.url', 'config.method', 'status', 'statusText', 'data', 'message']), true, null, true))
+                    }
 
-            generateTitle(" Request ")
-            console.log(rs)
+                    const file = path.resolve('./workspace/output.json')
+                    fs.writeFileSync(file, JSON.stringify(_.pick(res, ['config.headers', 'config.url', 'config.method', 'status', 'statusText', 'data'])), 'utf8')
 
-            if ('response' in res) {
-                generateTitle(" Response ")
-                // const a = _.get(res, 'config')
-                // console.log(Object.keys(a as unknown as object))
-                console.log(util.inspect(_.pick(res.response, ['config.headers', 'config.url', 'config.method', 'status', 'statusText', 'data']), true, null, true))
-            } else {
-                generateTitle(" Response ")
-
-                // const a = _.get(res, 'config')
-                // console.log(Object.keys(a as unknown as object))
-                console.log(util.inspect(_.pick(res, ['config.headers', 'config.url', 'config.method', 'status', 'statusText', 'data']), true, null, true))
-            }
-
-            const file = path.resolve('./workspace/output.json')
-            fs.writeFileSync(file, JSON.stringify(_.pick(res, ['config.headers', 'config.url', 'config.method', 'status', 'statusText', 'data'])), 'utf8')
-
-            exec(`${path.resolve('./node_modules/prettier/bin-prettier.js')} --write ${path.resolve('./workspace/output.json')}`, (error, stdout, stderr) => {
-                if (error) {
-                    console.log(`error: ${error.message}`);
-                    return;
+                    exec(`${path.resolve('./node_modules/prettier/bin-prettier.js')} --write ${path.resolve('./workspace/output.json')}`, (error, stdout, stderr) => {
+                        if (error) {
+                            console.log(`error: ${error.message}`);
+                            return;
+                        }
+                        if (stderr) {
+                            console.log(`stderr: ${stderr}`);
+                            return;
+                        }
+                        console.log(`stdout: ${stdout}`);
+                    })
+                } catch (error) {
+                    console.error(chalk.red.bold(_.get(error, 'message')))
                 }
-                if (stderr) {
-                    console.log(`stderr: ${stderr}`);
-                    return;
-                }
-                console.log(`stdout: ${stdout}`);
-            })
+
+            }
         }
     })
 
 program.parse()
+
+if (process.argv.length === 2) program.help()
 
 
 

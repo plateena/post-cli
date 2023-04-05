@@ -28,3 +28,8 @@ request:
     data: 
       image: './workspace/Guns-and-stuff.webp'
       version: '2'
+
+  test3:
+    method: "GET"
+    params: 
+      service: 'image'

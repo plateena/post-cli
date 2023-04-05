@@ -1,6 +1,8 @@
 import FormData from 'form-data'
 import fs from 'fs'
 import path from 'path'
+import chalk from 'chalk'
+import * as validator from './utils/validator.js'
 
 const resolve = path.resolve
 
@@ -8,14 +10,22 @@ const resolve = path.resolve
  * get the method 
  */
 export function getMethod(request: configRequest): method_enum {
-    return request.method
+    if('method' in request) {
+        return request.method
+    } else {
+        return 'GET' as unknown as method_enum
+    }
 }
 
 /**
  * prepare the url with all the params and query
  */
 export function getUrl(request: configRequest): configRequest["url"] {
+
     let url: configRequest["url"] = request.url
+    if (!url) {
+        throw new Error("ERROR: no url defined")
+    }
 
     if (Object.prototype.hasOwnProperty.call(request, 'params')) {
         url = setUrlParam(url, request.params)
@@ -23,6 +33,11 @@ export function getUrl(request: configRequest): configRequest["url"] {
 
     if (Object.prototype.hasOwnProperty.call(request, 'queries')) {
         url = setUrlQuery(url, request.queries)
+    }
+
+    // check if the url is valid
+    if (!validator.isValidURL(url)) {
+        throw new Error(`ERROR: ${url} is not a valid url`)
     }
 
     return url

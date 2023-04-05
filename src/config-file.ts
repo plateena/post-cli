@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 import _ from 'lodash'
+import chalk from 'chalk'
 import fs from 'fs'
 import yaml from 'js-yaml'
 import * as validator from './utils/validator.js'
@@ -43,7 +44,7 @@ export const getConfigRequest = (config: configFile, requestName: string): confi
     if (Object.prototype.hasOwnProperty.call(config.request, requestName)) {
         return config.request[requestName as keyof typeof config]
     } else {
-        console.error(`Request name ${requestName} can't be found. Make sure you have create the request in the yaml file.`);
+        console.error(chalk.red(`ERROR: Request name ${requestName} can't be found. Make sure you have create the request in the yaml file.`))
         return false
     }
 }
