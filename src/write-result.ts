@@ -2,8 +2,9 @@ import path from 'path'
 import fs from 'fs'
 import _ from 'lodash'
 import { exec } from 'child_process'
+import { AxiosResponse } from 'axios'
 
-export function writeResult(filepath: string, res: any) {
+export function writeResult(filepath: string, res: AxiosResponse) {
     const dirname = path.dirname(path.resolve(filepath))
     const file = path.resolve(filepath)
 
@@ -23,14 +24,9 @@ export function writeResult(filepath: string, res: any) {
 
     fs.writeFileSync(file, JSON.stringify(_.pick(res, ['config.headers', 'config.url', 'config.method', 'status', 'statusText', 'data'])), 'utf8')
 
-    exec(`${path.resolve('./node_modules/prettier/bin-prettier.js')} --write ${file}`, (error, stdout, stderr) => {
+    exec(`${path.resolve('./node_modules/prettier/bin-prettier.js')} --write ${file}`, (error) => {
         if (error) {
             throw new Error(`error: ${error.message}`);
         }
-        // if (stderr) {
-        //     console.log(`stderr: ${stderr}`);
-        //     return;
-        // }
-        // console.log(`stdout: ${stdout}`);
     })
 }

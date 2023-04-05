@@ -7,11 +7,10 @@ import * as req from './make-request.js'
 import chalk from 'chalk'
 import _ from 'lodash'
 import util from 'util'
-import fs from 'fs'
-import path from 'path'
 import { generateTitle } from './utils/title.js'
 import { listRequest } from './list-request.js'
 import { writeResult } from './write-result.js'
+import { AxiosResponse } from 'axios'
 
 const program = new Command()
 
@@ -44,7 +43,7 @@ program
             if (typeof rs == 'object') {
 
                 try {
-                    const res = await req.process(rs)
+                    const res: AxiosResponse = await req.process(rs)
                     generateTitle(" Request ")
                     console.log(rs)
 
